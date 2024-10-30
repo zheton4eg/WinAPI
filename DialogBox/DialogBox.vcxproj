@@ -138,6 +138,9 @@
   <ItemGroup>
     <Image Include="..\cryptocurrencies_bitcoin_coin_money_icon_210247.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resource.hm" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
