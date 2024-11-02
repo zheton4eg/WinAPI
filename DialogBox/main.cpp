@@ -1,5 +1,10 @@
 #include<Windows.h>
+
 #include"resource.h"
+
+CONST CHAR g_sz_LOGIN_INVITATION[] = "¬ведите им€ пользовател€";
+CONST CHAR g_sz_PASSWORD_INVITATION[] = "¬ведите пароль";
+
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -10,19 +15,51 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 }
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
+{	
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
 	{
 		HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
 		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
-	}
 
-		break;
+		HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
+		SendMessage(hEditLogin, WM_SETTEXT, 0, (LPARAM)g_sz_LOGIN_INVITATION);
+
+		HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
+		SendMessage(hEditPassword, WM_SETTEXT, 0, (LPARAM)g_sz_PASSWORD_INVITATION);
+
+	}
+	break;
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
+		case IDC_EDIT_LOGIN:
+		{
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE]{};
+			HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
+			SendMessage(hEditLogin, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			if (HIWORD(wParam) == EN_SETFOCUS && strcmp(sz_buffer, g_sz_LOGIN_INVITATION) == 0)
+				SendMessage(hEditLogin, WM_SETTEXT, 0, (LPARAM)"");
+			
+			if (HIWORD(wParam) == EN_KILLFOCUS && strcmp(sz_buffer, "") == 0)
+				SendMessage(hEditLogin, WM_SETTEXT, 0, (LPARAM)g_sz_LOGIN_INVITATION);
+		}
+		break;
+		case IDC_EDIT_PASSWORD:
+		{
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE]{};
+			HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
+			SendMessage(hEditPassword, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			if (HIWORD(wParam) == EN_SETFOCUS && strcmp(sz_buffer, g_sz_PASSWORD_INVITATION) == 0)
+				SendMessage(hEditPassword, WM_SETTEXT, 0, (LPARAM)"");
+
+			if (HIWORD(wParam) == EN_KILLFOCUS && strcmp(sz_buffer, "") == 0)
+				SendMessage(hEditPassword, WM_SETTEXT, 0, (LPARAM)g_sz_PASSWORD_INVITATION);
+		}
+		break;
 		case IDC_BUTTON_COPY:
 		{
 			HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
@@ -30,14 +67,17 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			
 			CONST INT SIZE = 256;
 			CHAR sz_buffer[SIZE] = {};
-			SendMessage(hEditLogin, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
-			SendMessage(hEditPassword, WM_SETTEXT, 0, (LPARAM)sz_buffer);
-
+			if (HIWORD(wParam) == EN_KILLFOCUS && HIWORD(wParam) == EN_KILLFOCUS)
+			{
+				SendMessage(hEditLogin, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+				SendMessage(hEditPassword, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+				SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+				SendMessage(GetDlgItem(hwnd, IDC_BUTTON_COPY), WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			}
 		}
-			break;
+		break;
 		case IDOK:		MessageBox(hwnd, "Ѕыла нажата кнопка OK!", "Info", MB_OK | MB_ICONINFORMATION); break;
-		case IDCANCEL:	EndDialog(hwnd, 0); 
-			break;
+		case IDCANCEL:	EndDialog(hwnd, 0); break;
 		}
 		break;
 	case WM_CLOSE:
