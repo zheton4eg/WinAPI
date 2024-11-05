@@ -20,10 +20,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="F:\Загрузки\plant_game_mushroom_fungus_food_flower_cooking_vegetable_icon_262399.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="F:\Загрузки\video-game-play-toad-mushroom-mario_108577 (1).ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -31,10 +36,5 @@
     <ResourceCompile Include="Resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="32377cheesewedge_98913.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>
