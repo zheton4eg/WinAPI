@@ -90,8 +90,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		//TranslateMessage(&msg);
+		//DispatchMessage(&msg);
+		IsDialogMessage(hwnd, &msg);
 	}
 
 	return msg.message;
@@ -102,8 +103,49 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
-		HICON hIcon1 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
-		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon1);
+		//HICON hIcon1 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
+		//SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon1);
+		CreateWindowEx
+		(
+			NULL, 
+			"Static",
+			"Эта подпись создана при помощи функции CreateWindowEx()",
+			WS_CHILDWINDOW | WS_VISIBLE,
+			10,10,
+			500,25,
+			hwnd,
+			(HMENU)IDC_STATIC,
+			GetModuleHandle(NULL),
+			NULL
+			);
+		CreateWindowEx
+		(
+			NULL,
+			"Edit",
+			"",
+			WS_CHILDWINDOW|WS_VISIBLE|WS_BORDER|WS_TABSTOP | WS_GROUP,
+			10,48,
+			500,25,
+			hwnd,
+			(HMENU)IDC_EDIT,
+			GetModuleHandle(NULL),
+			NULL
+		);
+		CreateWindowEx
+		(
+			NULL,
+			"Button",
+			"Применить",
+			WS_CHILD | WS_VISIBLE|WS_TABSTOP|WS_GROUP,
+			10, 85,
+			150, 32,
+			hwnd,
+			(HMENU)IDC_BUTTON,
+			GetModuleHandle(NULL),
+			NULL
+
+		);
+
 	}
 		break;
 	case WM_MOVE:
@@ -121,6 +163,19 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 		break;
 	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDC_BUTTON:
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE]{};
+			HWND hStatic = GetDlgItem(hwnd, IDC_STATIC);
+			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
+			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			SendMessage(hStatic, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			SendMessage(GetDlgItem(hwnd, IDC_BUTTON), WM_SETTEXT,0, (LPARAM)sz_buffer);
+			break;
+		}
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
