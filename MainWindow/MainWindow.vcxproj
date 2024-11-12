@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cursor1.cur" />
+    <None Include="Starcraft Cursor\SC2-cursor.cur" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
