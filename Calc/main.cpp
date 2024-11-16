@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include<Windows.h>
 #include"resource.h"
 
@@ -7,7 +8,7 @@ CONST INT g_i_INTERVAL = 5;
 CONST INT g_i_BUTTON_SIZE = 50;
 CONST INT g_i_BUTTON_DOUBLE_SIZE = g_i_BUTTON_SIZE * 2 + g_i_INTERVAL;
 
-CONST INT g_i_DISPLAY_WIDTH =g_i_BUTTON_SIZE*5+g_i_INTERVAL*4;
+CONST INT g_i_DISPLAY_WIDTH = g_i_BUTTON_SIZE * 5 + g_i_INTERVAL * 4;
 CONST INT g_i_DISPLAY_HEIGHT = 22;
 
 CONST INT g_i_START_X = 10;
@@ -15,16 +16,16 @@ CONST INT g_i_START_Y = 10;
 
 CONST INT g_i_BUTTON_START_X = g_i_START_X;
 CONST INT g_i_BUTTON_START_Y = g_i_START_Y + g_i_DISPLAY_HEIGHT + g_i_INTERVAL;
-CONST INT g_i_OPERATION_BUTTON_START_X = g_i_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL)*3;
+CONST INT g_i_OPERATION_BUTTON_START_X = g_i_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL) * 3;
 CONST INT g_i_OPERATION_BUTTON_START_Y = g_i_START_Y;
 
-CONST INT g_i_CONTROL_BUTTON_START_X = g_i_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL)*4;
+CONST INT g_i_CONTROL_BUTTON_START_X = g_i_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL) * 4;
 CONST INT g_i_CONTROL_BUTTON_START_Y = g_i_BUTTON_START_Y;
 
 CONST CHAR* g_OPERATIONS[] = { "+", "-", "*", "/" };
 
-CONST INT g_i_WINDOW_WIDTH = g_i_DISPLAY_WIDTH + g_i_START_X * 2+16;
-CONST INT g_i_WINDOW_HEIGHT = g_i_DISPLAY_HEIGHT +24+ g_i_START_Y * 2 + (g_i_BUTTON_SIZE + g_i_INTERVAL) * 4+16;
+CONST INT g_i_WINDOW_WIDTH = g_i_DISPLAY_WIDTH + g_i_START_X * 2 + 16;
+CONST INT g_i_WINDOW_HEIGHT = g_i_DISPLAY_HEIGHT + 24 + g_i_START_Y * 2 + (g_i_BUTTON_SIZE + g_i_INTERVAL) * 4 + 16;
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -61,7 +62,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		NULL,
 		g_sz_CLASS_NAME,
 		g_sz_CLASS_NAME,
-		WS_OVERLAPPEDWINDOW^WS_THICKFRAME^WS_MAXIMIZEBOX,
+		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		g_i_WINDOW_WIDTH, g_i_WINDOW_HEIGHT,
 		NULL,
@@ -92,8 +93,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		HWND hEdit = CreateWindowEx
 		(
-			NULL, "Edit", "",
-			WS_CHILD | WS_VISIBLE | WS_BORDER,
+			NULL, "Edit", "0",
+			WS_CHILD | WS_VISIBLE | WS_BORDER | ES_RIGHT,
 			10, 10,
 			g_i_DISPLAY_WIDTH, g_i_DISPLAY_HEIGHT,
 			hwnd,
@@ -112,16 +113,16 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					NULL, "Button", sz_digit,
 					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 
-					g_i_BUTTON_START_X+j * (g_i_BUTTON_SIZE+g_i_INTERVAL),
-					g_i_BUTTON_START_Y+(g_i_BUTTON_SIZE + g_i_INTERVAL) * (2-i / 3),
+					g_i_BUTTON_START_X + j * (g_i_BUTTON_SIZE + g_i_INTERVAL),
+					g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL) * (2 - i / 3),
 					g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 					hwnd,
-					(HMENU)IDC_BUTTON_1 + i + j,
+					(HMENU)(IDC_BUTTON_1 + i + j),
 					GetModuleHandle(NULL),
 					NULL
 				);
-				
-			}		
+
+			}
 		}
 		CreateWindowEx
 		(NULL, "Button", "0",
@@ -178,7 +179,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL, "Button", "C",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			g_i_CONTROL_BUTTON_START_X,
-			g_i_CONTROL_BUTTON_START_Y+g_i_BUTTON_SIZE+g_i_INTERVAL,
+			g_i_CONTROL_BUTTON_START_Y + g_i_BUTTON_SIZE + g_i_INTERVAL,
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			hwnd,
 			(HMENU)IDC_BUTTON_CLEAR,
@@ -190,17 +191,44 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL, "Button", "=",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			g_i_CONTROL_BUTTON_START_X,
-			g_i_CONTROL_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL)*2,
+			g_i_CONTROL_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL) * 2,
 			g_i_BUTTON_SIZE, g_i_BUTTON_DOUBLE_SIZE,
 			hwnd,
 			(HMENU)IDC_BUTTON_EQUAL,
 			GetModuleHandle(NULL),
 			NULL
-			);
+		);
 	}
 	break;
 	case WM_COMMAND:
-		break;
+	{
+		CONST INT SIZE = 256;
+		CHAR sz_display[SIZE]{};
+		CHAR sz_digit[2] = {};
+		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+		SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
+		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
+		{
+
+			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + '0';
+			if (strlen(sz_display) == 1 && sz_display[0] == '0')
+				sz_display[0] = sz_digit[0];
+			else
+				strcat(sz_display, sz_digit);
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+
+		}
+		if (LOWORD(wParam) == IDC_BUTTON_POINT)
+		{
+			if (strchr(sz_display, '.'))break;
+			strcat(sz_display, ".");
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+		}
+
+
+
+	}
+	break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
