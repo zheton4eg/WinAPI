@@ -104,6 +104,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static BOOL input_operation = FALSE;
 
 	static INT color_index = 0;
+	static HANDLE hMyFont = NULL;
 
 
 	switch (uMsg)
@@ -125,6 +126,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 		);
 		AddFontResourceEx("Fonts\\Calculator.ttf", FR_PRIVATE, 0);
+		HINSTANCE hInstFont = LoadLibrary("Fonts\\Grunge Regular.dll");
+		HRSRC hFontRes = FindResource(hInstFont, MAKEINTRESOURCE(99), "BINARY");
+		HGLOBAL hFntMem = LoadResource(hInstFont, hFontRes);
+		VOID* fntData = LockResource(hFntMem);
+		DWORD nFonts = 0;
+		DWORD len = SizeofResource(hInstFont, hFontRes);
+		 hMyFont = AddFontMemResourceEx(fntData, len, nullptr, &nFonts);
 		HFONT hFont = CreateFont
 		(
 			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
@@ -139,8 +147,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CLIP_TT_ALWAYS,
 			ANTIALIASED_QUALITY,
 			FF_DONTCARE,
-			"Calculator"
+			"Grunge"
+			//"Calculator"
 		);
+		//MoveTo WM_DESTROY: RemoveFontMemResourceEx(hMyFont);
+		FreeLibrary(hInstFont);
 		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 
 		CHAR sz_digit[2] = "0";
@@ -509,6 +520,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	////////////////////////////
 	case WM_DESTROY:
 	{
+		RemoveFontMemResourceEx(hMyFont);
 		HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		HDC hdc = GetDC(hEdit);
 		ReleaseDC(hEdit, hdc);
